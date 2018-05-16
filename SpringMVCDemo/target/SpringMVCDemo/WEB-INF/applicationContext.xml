@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    <!--扫描所有的 spring包下的文件；-->
+    <!--当然需要在spring配置文件里面配置一下自动扫描范围  <context:component-scan base-package="*"/>
+    *代表你想要扫描的那些包的目录所在位置。Spring 在容器初始化时将自动扫描 base-package 指定的包及其子包下的所有的.class文件，
+    所有标注了 @Repository 的类都将被注册为 Spring Bean。-->
+    <context:component-scan base-package="com.lianjia.SpringMVCDemo" />
+    <!--新增加的两个配置-->
+    <!-- mvc注解驱动(可代替注解适配器与注解映射器的配置)，默认加载很多参数绑定方法（实际开发时使用） -->
+
+    <context:annotation-config />
+    <mvc:annotation-driven />
+    <!--end-->
+
+    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+    <!--自己后加的，该BeanPostProcessor将自动对标注@Autowired的bean进行注入-->
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"></bean>
+
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+        <property name="messageConverters">
+            <list>
+                <!--<ref bean="stringHttpMessageConverter"/>-->
+                <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>
+                <bean class="org.springframework.http.converter.ResourceHttpMessageConverter"/>
+                <bean class="org.springframework.http.converter.xml.SourceHttpMessageConverter"/>
+                <bean class="org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter"/>
+                <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+            </list>
+        </property>
+    </bean>
+
+</beans>
